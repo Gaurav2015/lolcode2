@@ -1,12 +1,15 @@
-#pragma once
+#ifndef _MAIN_H_
+#define _MAIN_H_
+
 #include <stdio.h>
-#include <llvm-c/Core.h>
 #include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
 
-FILE* in;
+FILE* src;
 
-void memerror()
-{
-	puts("Ran out of memory.\n");
-	exit(1);
-}
+extern void memerr();
+extern void segerr();
+extern char* concat(char* dest, char* src);
+
+#endif

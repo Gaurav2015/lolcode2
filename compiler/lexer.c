@@ -1,128 +1,100 @@
-/**
- * @file lexer.c
- * @brief contains lexical analyzing functions used in compiler
- *
- * @author Arun Dilipan
- */
+/*
+	Creates lex items that are passed to the tokenizer.
+	Copyright 2013 Arun Dilipan
+	
+	Licensed under the "THE BEER-WARE LICENSE" (Revision 42):
+	Arun Dilipan wrote this file. As long as you retain this notice you
+	can do whatever you want with this stuff. If we meet some day, and you think
+	this stuff is worth it, you can buy me a beer or coffee in return. 
+*/
 
 #include "lexer.h"
-#include <string.h>
-#include <stdio.h>
 
-int nchar[1];
+char nchar[1];
 
-lexitem_t* new_lexitem(char* image, unsigned int line)
+lexitem* new_lexitem(char* image, char* fname, unsigned int line)
 {
-	lexitem_t* item = malloc(sizeof(lexitem_t));
-	if(item == NULL) {
-		free(item);
-		return NULL;
-	}
-	item->image = malloc(strlen(image) * sizeof(char));
-	if(!(item->image)) {
-		free(item->image);
-		free(item);
-		return NULL;
-	}
-	strcpy(item->image, image);
+	lexitem* item = malloc(sizeof(lexitem));
+	if (item == NULL) 
+		memerr();
+	item->image = image;
+	item->fname = fname;
 	item->line = line;
 	return item;
 }
 
-void free_lexitem(lexitem_t* item)
+lexitemlist* new_lexitemlist()
 {
-	free(item->image);
-	free(item);
-}
-
-lexitemlist_t* new_lexitemlist(void)
-{
-	lexitemlist_t* list = malloc(sizeof(lexitemlist_t));
-	if (list == NULL) {
-		free(list);
-		return NULL;
-	}
-	list->nlexitems = 0;
-	list->lexitems = NULL;
+	lexitemlist* list = malloc(sizeof(lexitemlist));
+	if (list == NULL)
+		memerr();
+	list->items = NULL;
+	list->nitems = 0;
 	return list;
 }
 
-void add_lexitem(lexitemlist_t* list, lexitem_t* item)
+void add_item(lexitemlist* list, lexitem* item)
 {
-	list->lexitems = realloc(list->lexitems, sizeof(lexitem_t) * (list->nlexitems + 1));
-    if (!list->lexitems)
-	{
-		 free(list->lexitems);
-		 free(list);
-		 return;
-	}
-	list->nlexitems++;
-	list->lexitems[list->nlexitems] = item;
+	if (!list->nitems)
+		list->items = malloc(++list->nitems * sizeof(lexitem*));
+	else
+		list->items = realloc(list->items, ++list->nitems * sizeof(lexitem*));
+
+	list->items[list->nitems - 1] = item;
 }
 
-lexitemlist_t* scanbuffer()
+lexitemlist* scanbuffer(char* filename)
 {
-	int line = 1;
-	lexitemlist_t* list = new_lexitemlist();
-	if (!list)
-	{
-		free(list->lexitems);
-		free(list);
-		return NULL;
-	}
-
+	unsigned int line = 1;
+	lexitemlist* list = new_lexitemlist();
 	char* image = "";
-	
-	while ((nchar[0] = fgetc(src)) != EOF)
-	{
-	    while (isspace(nchar[0]))
-		{
-			if (nchar[0] == '\n')
+
+	while ((nchar[0] = fgetc(src)) != EOF) {
+		while (isspace(nchar[0]) && nchar[0] != EOF) {
+			if (nchar[0] == '\n' || (nchar[0] == '\r' && (nchar[0] = fgetc(src)) == '\n'))
 				line++;
 			nchar[0] = fgetc(src);
 		}
 
-		nchar[0] = fgetc(src);
-		image = strcat(image, nchar[0]);
-
-		if (nchar[0] == '\"')
-		{
-			while ((nchar[0] == fgetc(src)) != '\"')
-			{
-				if (nchar[0] == ':')
-				{
-					int nextChar = fgetc(src);
-					switch (nextChar)
-					{
+		if (nchar[0] == EOF)
+			return list;
+		
+		//TODO fix this if statement right here. This if statement is going bad.
+		if (nchar[0] == '\"') {
+			image = concat(image, nchar);
+			while (nchar[0] != '\"' && nchar[0] != EOF) {
+				if (nchar[0] == ':') {
+					nchar[0] = fgetc(src);
+					switch (nchar[0]) {
+						case ':':
+							image = concat(image, ":");
+							break;
 						case ')':
-							nchar[0] = '\n';
-							image = strcat(image, (const char*)nchar);
+							image = concat(image, "\n");
 							break;
 						case '>':
-							nchar[0] = '\t';
-							image = strcat(image, (const char*)nchar);
-							break;
-						case '{':
-							//Add string interpolation.
+							image = concat(image, "\t");
 							break;
 						case '\"':
-							nchar[0] = '\"';
-							image = strcat(image, (const char*)nchar);
+							image = concat(image, "\"");
 							break;
+						default:
+							printf("Unrecognized escape @ line %d in file %s: \":%c\"", line, filename, (char)nchar[0]);
+							exit(EXIT_FAILURE);
 					}
 				}
-
-				image = strcat(image, (const char*)nchar);
+				nchar[0] = fgetc(src);
 			}
-		} else
-			while (!isspace(nchar[0]))
-				image = strcat(image, (const char*)nchar);
-			
-		lexitem_t* item = new_lexitem(image, line);
-		add_lexitem(list, item);
+		} else {
+			while (!isspace(nchar[0]) && nchar[0] != EOF) {
+				image = concat(image, nchar);
+				nchar[0] = fgetc(src);
+			}
+		}
+
+		add_item(list, new_lexitem(image, filename, line));
+		image = "";
 	}
 
-	fclose(src);
 	return list;
 }
-

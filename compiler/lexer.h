@@ -1,28 +1,32 @@
-#pragma once
+/*
+	Creates lex items that are passed to the tokenizer.
+	Copyright 2013 Arun Dilipan
+	
+	Licensed under the "THE BEER-WARE LICENSE" (Revision 42):
+	Arun Dilipan wrote this file. As long as you retain this notice you
+	can do whatever you want with this stuff. If we meet some day, and you think
+	this stuff is worth it, you can buy me a beer or coffee in return. 
+*/
+
+#ifndef _LEXER_H_
+#define _LEXER_H_
+
 #include "main.h"
-#include <ctype.h>
 
-#define isvident(x) (isalnum(x) || x >= 0xC0) 
+typedef struct lexitem_t lexitem;
+typedef struct lexitemlist_t lexitemlist;
 
-typedef struct lexitem lexitem_t;
-typedef struct lexitemlist lexitemlist_t;
-
-struct lexitem
-{
+struct lexitem_t {
 	char* image;
+	char* fname;
 	unsigned int line;
 };
 
-struct lexitemlist
-{
-	unsigned int nlexitems;
-	lexitem_t** lexitems;
+struct lexitemlist_t {
+	lexitem** items;
+	unsigned int nitems;
 };
 
-extern lexitem_t* new_lexitem(char*, unsigned int);
-extern void free_lexitem(lexitem_t*);
-extern lexitemlist_t* new_lexitemlist(void);
-extern void add_lexitem(lexitemlist_t*, lexitem_t*);
-extern void free_lexitemlist(lexitemlist_t*);
+extern lexitemlist* scanbuffer(char*);
 
-extern lexitemlist_t* scan_buffer(char*, unsigned int, char*);
+#endif
