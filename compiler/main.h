@@ -8,8 +8,12 @@
 
 FILE* src;
 
+extern char** lnames;
+extern unsigned int nlnames; 
+
 extern void memerr();
 extern void segerr();
+extern void strerr();
 extern char* concat(char* dest, char* src);
 
 #endif

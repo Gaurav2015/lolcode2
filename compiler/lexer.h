@@ -11,6 +11,10 @@
 #ifndef _LEXER_H_
 #define _LEXER_H_
 
+#define str(X)	_Generic((X), long: lstr, \
+							  double: dstr, \
+							  bool: bstr)(X)
+
 #include "main.h"
 
 typedef struct lexitem_t lexitem;

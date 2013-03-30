@@ -2,6 +2,9 @@
 
 #define READ_ONLY "r"
 
+char** lnames;
+unsigned int nlnames; 
+
 void memerr()
 {
 	puts("Ran out of memory.");
@@ -11,6 +14,12 @@ void memerr()
 void segerr()
 {
 	puts("Trying to dereference null pointer.");
+	exit(EXIT_FAILURE);
+}
+
+void strerr()
+{
+	puts("Error with string.");
 	exit(EXIT_FAILURE);
 }
 
@@ -27,6 +36,7 @@ int main(int argc, const char *argv[])
 		puts("Not enough arguments.");
 		exit(EXIT_SUCCESS);
 	} else {
+		nlnames = 0;
 		char* filename = argv[1];
 		src = fopen(filename, READ_ONLY);
 

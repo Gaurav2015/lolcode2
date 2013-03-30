@@ -12,6 +12,27 @@
 
 char nchar[1];
 
+char* lstr(long l)
+{
+	const unsigned int n = snprintf(NULL, 0, "%ld", l);
+	char buf[n+1];
+	snprintf(buf, n+1, "%ld", l);
+	return buf;
+}
+
+char* dstr(double d)
+{
+	const unsigned int n = snprintf(NULL, 0, "%lf", l);
+	char buf[n+1];
+	snprintf(buf, n+1, "%lf", l);
+	return buf;
+}
+
+char* bstr(bool b)
+{
+	return b ? "WIN" : "FAIL";
+}
+
 lexitem* new_lexitem(char* image, char* fname, unsigned int line)
 {
 	lexitem* item = malloc(sizeof(lexitem));
@@ -43,6 +64,23 @@ void add_item(lexitemlist* list, lexitem* item)
 	list->items[list->nitems - 1] = item;
 }
 
+char* interpolate()
+{
+	char* result = "";
+
+	while ((nchar[0] = fgetc(src)) != '}')
+	{
+		if (nchar[0] == '\"' || nchar[0] == EOF)
+			strerr();
+
+		result = concat(result, nchar);
+	}
+
+	/* TODO check for locals and interpolate the values. */
+
+	// return ;
+}
+
 lexitemlist* scanbuffer(char* filename)
 {
 	unsigned int line = 1;
@@ -58,33 +96,43 @@ lexitemlist* scanbuffer(char* filename)
 
 		if (nchar[0] == EOF)
 			return list;
-		
-		//TODO fix this if statement right here. This if statement is going bad.
+
 		if (nchar[0] == '\"') {
 			image = concat(image, nchar);
+			nchar[0] = fgetc(src);
 			while (nchar[0] != '\"' && nchar[0] != EOF) {
 				if (nchar[0] == ':') {
 					nchar[0] = fgetc(src);
 					switch (nchar[0]) {
 						case ':':
 							image = concat(image, ":");
-							break;
+							nchar[0] = fgetc(src);
+							continue;
 						case ')':
 							image = concat(image, "\n");
-							break;
+							nchar[0] = fgetc(src);							
+							continue;
 						case '>':
 							image = concat(image, "\t");
-							break;
+							nchar[0] = fgetc(src);
+							continue;
 						case '\"':
 							image = concat(image, "\"");
-							break;
+							nchar[0] = fgetc(src);
+							continue;
+						case '{':
+							/* Add functionality for string interpolation */
+							interpolate();
+							continue;
 						default:
 							printf("Unrecognized escape @ line %d in file %s: \":%c\"", line, filename, (char)nchar[0]);
 							exit(EXIT_FAILURE);
 					}
 				}
+				image = concat(image, nchar);
 				nchar[0] = fgetc(src);
 			}
+			image = concat(image, nchar);
 		} else {
 			while (!isspace(nchar[0]) && nchar[0] != EOF) {
 				image = concat(image, nchar);
