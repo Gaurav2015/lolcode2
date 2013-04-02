@@ -1,12 +1,14 @@
-#pragma once
-#include "lexer.h"
+#ifndef _TOKENIZER_H_
+#define _TOKENIZER_H_
 
-#define NEW(x) (malloc(sizeof((x))))
+#include "lexer.h"
 
 typedef enum { T_NUMBAR, T_YARN, T_BOOL, T_IDENT, T_KEYWORD } token_type;
 
 typedef struct token {
 	token_type type;
+	unsigned int line;
+	char* fname;
 	union {
 		double d;
 		char* s;
@@ -22,25 +24,23 @@ typedef struct tokenlist {
 } tokenlist_t;
 
 char* keywords[] = {
-	"!"
-	"!!"
+	"!",
+	"!!",
 	"\'Z",
-	"?"
+	"?",
 	"A",
 	"BIGGR",
 	"BRB",
-	"BUKKIT",
 	"BUT",
 	"BUTTSECHS",
 	"CAN",
-	"COOKEH"
 	"DIAF",
 	"DINO",
 	"DUZ",
-	"EAT",
 	"EATED",
 	"EATIN",
 	"FOUND",
+	"GTFO",
 	"HAI",
 	"HAO",
 	"HAS",
@@ -51,22 +51,16 @@ char* keywords[] = {
 	"IN",
 	"ITZ",
 	"IZ",
-	"JAR",
 	"KTHX",
 	"KTHXBAI",
 	"LETZAGO!",
 	"LIEK",
 	"LOOP",
 	"MAED",
-	"MAEK",
-	"MAH",
-	"ME",
 	"NERF",
 	"NERFIN",
 	"NERFZ",
 	"NOOB",
-	"O",
-	"OF",
 	"OMG",
 	"OMGWTFBBQ",
 	"OUTTA",
@@ -76,22 +70,21 @@ char* keywords[] = {
 	"POPACAPINHISASS",
 	"SAY",
 	"SHIFLOL",
-	"SHIFLOLIN",
-	"SHIFLOLZ",
-	"SHIFZOR",
-	"SHIFZORZ",
-	"SHIFZORZIN",
+    "SHIFLOLIN",
+    "SHIFLOLZ",
+    "SHIFZOR",
+    "SHIFZORZ",
+    "SHIFZORZIN",
 	"SLICIN",
 	"SMALR",
 	"SO",
-	"SURPRIZE",
+	"SURPRIEZ",
 	"TIEMZ",
 	"TIEMZD",
 	"TIEMZIN",
 	"TILL",
-	"U",
 	"UP",
-	"UPPIN",
+	"UPPIN,
 	"UPZ",
 	"WIF",
 	"WILE",
@@ -100,3 +93,5 @@ char* keywords[] = {
 };
 
 const size_t nkwds = sizeof(keywords) / sizeof(char*);
+
+#endif

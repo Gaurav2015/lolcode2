@@ -1,3 +1,13 @@
+/*
+	Main part of the program; contains int main.
+	Copyright 2013 Arun Dilipan
+	
+	Licensed under the "THE BEER-WARE LICENSE" (Revision 42):
+	Arun Dilipan wrote this file. As long as you retain this notice you
+	can do whatever you want with this stuff. If we meet some day, and you think
+	this stuff is worth it, you can buy me a beer or coffee in return 
+*/
+
 #ifndef _MAIN_H_
 #define _MAIN_H_
 

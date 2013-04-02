@@ -1,29 +1,38 @@
+/*
+	The tokenizer portion of the compiler.
+	Copyright 2013 Arun Dilipan 
+	
+	Licensed under the "THE BEER-WARE LICENSE" (Revision 42):
+	Arun Dilipan wrote this file. As long as you retain this notice you
+	can do whatever you want with this stuff. If we meet some day, and you think
+	this stuff is worth it, you can buy me a beer or coffee in return 
+*/
+
 #include "tokenizer.h"
 #include <string.h>
-
 #define IS_KEY(x) is_keyword((x), 0, nkwds)
 
 // Implements a binary search algorithm for
 // searching all the keywords.
 int is_keyword(char* key, int min, int max)
 {
-	if (max < min)
-		return -1;
-	else {
-		int mid = (max + min) / 2;
+	while (max >= min) {
+		int mid = (min + max) / 2;
 
-		if (strcmp(keywords[mid], key) > 0)
-			return is_keyword(key, min, mid - 1);
-		else if (strcmp(keywords[mid], key) < 0)
-			return is_keyword(key, mid + 1, max);
+		if (strcmp(key, keywords[mid]) < 0)
+			max = mid - 1;
+		else if (strcmp(key, keywords[mid]) > 0)
+			min = mid + 1;
 		else
 			return mid;
 	}
+
+	return -1;
 }
 
 token_t* new_numbar_token(double num)
 {
-	token_t* token = NEW(token_t);
+	token_t* token = malloc(sizeof(token_t));
 	if (!token) {
 		free(token);
 		return NULL;
@@ -35,7 +44,7 @@ token_t* new_numbar_token(double num)
 
 token_t* new_yarn_token(char* s)
 {
-	token_t* token = NEW(token_t);
+	token_t* token = malloc(sizeof(token_t));
 	if (!token) {
 		free(token);
 		return NULL;
@@ -47,7 +56,7 @@ token_t* new_yarn_token(char* s)
 
 token_t* new_bool_token(bool b)
 {
-	token_t* token = NEW(token_t);
+	token_t* token = malloc(sizeof(token_t));
 	if(!token) {
 		free(token);
 		return NULL;
@@ -59,7 +68,7 @@ token_t* new_bool_token(bool b)
 
 token_t* new_ident_token(char* ident)
 {
-	token_t* token = NEW(token_t);
+	token_t* token = malloc(sizeof(token_t));
 	if (!token)
 	{
 		free(token);
@@ -72,7 +81,7 @@ token_t* new_ident_token(char* ident)
 
 token_t* new_keyword_token(int key)
 {
-	token_t* token = NEW(token);
+	token_t* token = malloc(sizeof(token));
 	if (!token) {
 		free(token);
 		return NULL;
@@ -84,7 +93,7 @@ token_t* new_keyword_token(int key)
 
 tokenlist_t* new_tokenlist()
 {
-	tokenlist_t* tokenlist = NEW(tokenlist_t);
+	tokenlist_t* tokenlist = malloc(sizeof(tokenlist_t));
 	if (!tokenlist) {
 		free(tokenlist);
 		return NULL;
@@ -104,7 +113,7 @@ void add_token(tokenlist_t* list, token_t* token)
 		return;
 	}
 	
-	list->tokens = realloc(list->tokens, sizeof(token_t) * ++tokens->ntokens)
+	list->tokens = realloc(list->tokens, sizeof(token_t) * ++list->ntokens);
 	if (!list->tokens[list->ntokens - 1]) {
 		free(list->tokens);
 		free(list);
@@ -114,14 +123,14 @@ void add_token(tokenlist_t* list, token_t* token)
 	list->tokens[list->ntokens - 1] = token;
 }
 
-tokenlist_t* tokenize_lexitems(lexitemlist_t* lilist)
+tokenlist_t* tokenize_items(lexitemlist* lilist)
 {
 	tokenlist_t* tlist = new_tokenlist();
 
-	for (int i = 0; i < lilist->nlexitems; i++)
+	for (int i = 0; i < lilist->nitems; i++)
 	{
 		//Check to see if this is a keyword.
-		int keyword = IS_KEY(lilist->lexitems[i]->str);
+		int keyword = IS_KEY(lilist->items[i]->image);
 
 		//If this is a keyword, make a new token.
 		if (keyword != -1)
@@ -133,35 +142,37 @@ tokenlist_t* tokenize_lexitems(lexitemlist_t* lilist)
 				continue;
 			}
 			else
-				memerror();
+				memerr;
 		}
 
 		//If this is a boolean true, then handle it.
-		if (strcmp(lilist->lexitems[i]->str, "WIN") == 0)
+		if (strcmp(lilist->items[i]->image, "WIN") == 0)
 		{
+			token_t* token;
 			if (token = new_bool_token(true))
 			{
 				add_token(tlist, token);
 				continue;
 			}
 			else
-				memerror();
+				memerr();
 		}
 
 		//If this is a boolan false, then handle it.
-		if (strcmp(lilist->lexitems[i]->str, "FAIL") == 0)
+		if (strcmp(lilist->items[i]->image, "FAIL") == 0)
 		{
+			token_t* token;
 			if (token = new_bool_token(false))
 			{
 				add_token(tlist, token);
 				continue;
 			}
 			else
-				memerror();
+				memerr();
 		}
 
 		char* endptr = "";
-		double dval = strtod(lilist->lexitems[i]->str, &endptr);
+		double dval = strtod(lilist->items[i]->image, &endptr);
 		if (*endptr == '\0')
 		{
 			token_t* token;
@@ -171,11 +182,11 @@ tokenlist_t* tokenize_lexitems(lexitemlist_t* lilist)
 				continue;
 			}
 			else
-				memerror();
+				memerr();
 		}
 
 
-		long lval = strtol(lilist->lexitems[i]->str, &endptr, 0);
+		long lval = strtol(lilist->items[i]->image, &endptr, 0);
 		if (*endptr == '\0')
 		{
 			token_t* token;
@@ -185,27 +196,28 @@ tokenlist_t* tokenize_lexitems(lexitemlist_t* lilist)
 				continue;
 			}
 			else
-				memerror();
+				memerr();
 		}
 
-		//if this is a string, then handle it.
-		if (lilist->lexitems[i]->str[0] == '\"')
+		//if this is a imageing, then handle it.
+		if (lilist->items[i]->image[0] == '\"')
 		{
 			token_t* token;
-			if (token = new_yarn_token(lilist->lexitems[i]->str))
+			if (token = new_yarn_token(lilist->items[i]->image))
 			{
 				add_token(tlist, token);
 				continue;
 			}
 			else
-				memerror();
+				memerr();
 		}
 
-		if (token = new_ident_token(lilist->lexitems[i]->str))
+		token_t* token;
+		if (token = new_ident_token(lilist->items[i]->image))
 		{
 			add_token(tlist, token);
 		}
 		else
-			memerror();
+			memerr();
 	}
 }

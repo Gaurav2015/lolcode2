@@ -1,5 +1,5 @@
-#ifndef _TEST_H
-#define _TEST_H
+#ifndef _TEST_H_
+#define _TEST_H_
 
 #include "lexer.h"
 
