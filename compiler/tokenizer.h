@@ -5,8 +5,7 @@
 
 typedef enum { T_NUMBAR, T_YARN, T_BOOL, T_IDENT, T_KEYWORD } token_type;
 
-typedef struct token
-{
+typedef struct token {
 	token_type type;
 	union {
 		double d;
@@ -17,8 +16,7 @@ typedef struct token
 	};
 } token_t;
 
-typedef struct tokenlist
-{
+typedef struct tokenlist {
 	token_t** tokens;
 	unsigned int ntokens;
 } tokenlist_t;

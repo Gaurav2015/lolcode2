@@ -5,11 +5,14 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdbool.h>
+#include "hashtable.h"
+#include "parser.h"
 
 FILE* src;
 
-extern char** lnames;
-extern unsigned int nlnames; 
+extern HTABLE* locals;
+extern HTABLE* funcs;
 
 extern void memerr();
 extern void segerr();
