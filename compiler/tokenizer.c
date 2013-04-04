@@ -123,6 +123,34 @@ void add_token(tokenlist_t* list, token_t* token)
 	list->tokens[list->ntokens - 1] = token;
 }
 
+token_t* next_token(lexitem* l)
+{	
+	int key = IS_KEY(l->image);
+
+	if (key != -1)
+		return new_keyword_token(key);
+	
+	if (!strcmp(l->image, "WIN"))
+		return new_bool_token(true);
+		
+	if (!strcmp(l->image, "FAIL"))
+		return new_bool_token(false);
+	
+	char* endptr = "";
+	double dval = strtod(l->image, &endptr);
+	if (*endptr == '\0')
+		return new_numbar_token(dval);
+		
+	long lval = strtol(l->image, &endptr, 0);
+	if (*endptr == '\0')
+		return new_numbar_token(lval);
+		
+	/* TODO add handler for string tokens */
+	
+	return new_ident_token(l);
+}
+
+/*
 tokenlist_t* tokenize_items(lexitemlist* lilist)
 {
 	tokenlist_t* tlist = new_tokenlist();
@@ -221,3 +249,4 @@ tokenlist_t* tokenize_items(lexitemlist* lilist)
 			memerr();
 	}
 }
+*/
