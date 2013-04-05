@@ -131,10 +131,10 @@ token_t* next_token(lexitem* l)
 		return new_keyword_token(key);
 	
 	if (!strcmp(l->image, "WIN"))
-		return new_bool_token(true);
+		return new_bool_token(1);
 		
 	if (!strcmp(l->image, "FAIL"))
-		return new_bool_token(false);
+		return new_bool_token(0);
 	
 	char* endptr = "";
 	double dval = strtod(l->image, &endptr);
@@ -146,8 +146,10 @@ token_t* next_token(lexitem* l)
 		return new_numbar_token(lval);
 		
 	/* TODO add handler for string tokens */
+	if (l->image[0] == '\"')
+		return new_yarn_token(l->image);
 	
-	return new_ident_token(l);
+	return new_ident_token(l->image);
 }
 
 /*
