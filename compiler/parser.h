@@ -1,8 +1,12 @@
+#ifndef _PARSER_H_
+#define _PARSER_H_
+
+#include "main.h"
+
 typedef struct expr_t expr;
 typedef struct binop_expr_t binop_expr;
 
-typedef enum
-{
+typedef enum {
 	T_NUMBR,
 	T_NUMBAR,
 	T_YARN,
@@ -10,8 +14,7 @@ typedef enum
 	T_BINOP
 } etype_t;
 
-struct expr_t
-{
+struct expr_t {
 	etype_t type;
 
 	union {
@@ -23,10 +26,10 @@ struct expr_t
 	};
 };
 
-struct binop_expr_t
-{
+struct binop_expr_t {
 	char op;
 	expr* lhs;
 	expr* rhs;
 };
 
+#endif
