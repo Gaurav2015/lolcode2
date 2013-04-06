@@ -10,6 +10,9 @@
 
 #include "lexer.h"
 
+HTABLE* locals;
+HTABLE* funcs;
+
 #define READ_ONLY "r"
 
 char** lnames;
@@ -50,11 +53,8 @@ int main(int argc, char *argv[])
 		char* filename = argv[1];
 		src = fopen(filename, READ_ONLY);
 
-		lexitemlist* l = scanbuffer(filename);
-		for (int i = 0; i < l->nitems; ++i)
-		{
-			puts(l->items[i]->image);
-		}
+		lexitem* l = next_item(filename);
+		puts(l->image);
 	}
 	return 0;
 }

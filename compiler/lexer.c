@@ -87,6 +87,7 @@ char* get_exprkey(expr* e)
 			return bstr(e->b);
 		default:
 			strerr();
+			return NULL;
 	}
 }
 
@@ -107,6 +108,7 @@ char* interpolate()
 	else {
 		printf("variable %s doesn\'t exist.\n", result);
 		exit(1);
+		return NULL;
 	}
 }
 
@@ -115,7 +117,7 @@ lexitem* next_item(char* filename)
 	char* image = "";
 
 	while (isspace((nchar[0] = fgetc(src))) && nchar[0] != EOF) {
-		if (nchar[0] = '\n' || (nchar[0] == '\r' && (nchar[0] = fgetc(src)) == '\n'))
+		if (nchar[0] == '\n' || (nchar[0] == '\r' && (nchar[0] = fgetc(src)) == '\n'))
 			line++;
 	}
 

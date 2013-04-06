@@ -27,6 +27,7 @@ struct lexitemlist_t {
 	unsigned int nitems;
 };
 
+extern lexitem* next_item(char*);
 extern lexitemlist* scanbuffer(char*);
 
 #endif

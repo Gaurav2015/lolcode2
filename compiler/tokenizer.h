@@ -24,7 +24,6 @@ typedef struct tokenlist {
 } tokenlist_t;
 
 char* keywords[] = {
-	"!",
 	"!!",
 	"\'Z",
 	"?",
