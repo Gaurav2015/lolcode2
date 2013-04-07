@@ -1,3 +1,13 @@
+/*
+	The hashtable used as the locals lookup table
+	Copyright 2013 Arun Dilipan.
+	
+	Licensed under the "THE BEER-WARE LICENSE" (Revision 42):
+	Arun Dilipan wrote this file. As long as you retain this notice you
+	can do whatever you want with this stuff. If we meet some day, and you think
+	this stuff is worth it, you can buy me a beer or coffee in return 
+*/
+
 #include "hashtable.h"
 
 const size_t FNV_OFFSET = 14695981039346656037U;
