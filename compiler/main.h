@@ -21,8 +21,12 @@
 
 FILE* src;
 
-extern HTABLE* locals;
 extern HTABLE* funcs;
+
+typedef struct lol_block_t {
+	HTABLE* locals;
+	lol_stmt** stmts;
+} lol_block;
 
 extern void memerr();
 extern void segerr();

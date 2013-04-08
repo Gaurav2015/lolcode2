@@ -1,12 +1,12 @@
 /*
-	Parser component of the compiler.
-	Copyright 2013 Arun Dilipan
-	
-	Licensed under the "THE BEER-WARE LICENSE" (Revision 42):
-	Arun Dilipan wrote this file. As long as you retain this notice you
-	can do whatever you want with this stuff. If we meet some day, and you think
-	this stuff is worth it, you can buy me a beer or coffee in return 
-*/
+   Parser component of the compiler.
+   Copyright 2013 Arun Dilipan
+
+   Licensed under the "THE BEER-WARE LICENSE" (Revision 42):
+   Arun Dilipan wrote this file. As long as you retain this notice you
+   can do whatever you want with this stuff. If we meet some day, and you think
+   this stuff is worth it, you can buy me a beer or coffee in return 
+ */
 
 #ifndef _PARSER_H_
 #define _PARSER_H_
@@ -14,6 +14,7 @@
 #include "main.h"
 
 typedef struct stmt_t stmt;
+typedef struct if_stmt_t if_stmt;
 typedef struct expr_t expr;
 typedef struct binop_expr_t binop_expr;
 
@@ -34,11 +35,24 @@ typedef enum {
 	S_FOREACH,
 } stype_t;
 
+struct if_stmt {
+	expr* cond;
+	block* t_block;
+	expr** elsifs;
+	block** ei_block;
+	block* e_block;
+};
+
 struct stmt_t {
 	stype_t type;
 
 	union {
 		//TODO add all stmt node possible.
+		if_stmt* istmt;
+		while_stmt* wstmt;
+		for_stmt* fstmt;
+		switch_stmt* sstmt;
+		foreach_stmt* festmt;
 	};
 };
 
