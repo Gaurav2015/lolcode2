@@ -17,14 +17,12 @@
 
 typedef size_t hsize_t;
 
-typedef struct htbl
-{
+typedef struct htbl {
 	hsize_t size;
 	struct hashnode_t** nodes;
 } HTABLE;
 
-struct hashnode_t
-{
+struct hashnode_t {
 	char* key;
 	void* data;
 	struct hashnode_t* next;

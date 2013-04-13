@@ -13,10 +13,10 @@
 
 #include "main.h"
 
-typedef struct stmt_t stmt;
-typedef struct if_stmt_t if_stmt;
-typedef struct expr_t expr;
-typedef struct binop_expr_t binop_expr;
+typedef struct stmt_t lol_stmt;
+typedef struct if_stmt_t lol_if_stmt;
+typedef struct expr_t lol_expr;
+typedef struct binop_expr_t lol_binop_expr;
 
 typedef enum {
 	T_NUMBR,

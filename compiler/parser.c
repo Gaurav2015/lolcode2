@@ -10,7 +10,7 @@
 
 #include "parser.h"
 
-expr* new_dexpr(double d)
+lol_expr* new_dexpr(double d)
 {
 	expr* e = malloc(sizeof(expr));
 	if (!e) {
@@ -21,7 +21,7 @@ expr* new_dexpr(double d)
 	return e;
 }
 
-expr* new_lexpr(long l)
+lol_expr* new_lexpr(long l)
 {
 	expr* e = malloc(sizeof(expr));
 	if (!e) {
@@ -32,7 +32,7 @@ expr* new_lexpr(long l)
 	return e;
 }
 
-expr* new_sexpr(char* s)
+lol_expr* new_sexpr(char* s)
 {
 	expr* e = malloc(sizeof(expr));
 	if (!e) {
@@ -43,7 +43,7 @@ expr* new_sexpr(char* s)
 	return e;
 }
 
-expr* new_bexpr(bool b)
+lol_expr* new_bexpr(bool b)
 {
 	expr* e = malloc(sizeof(expr));
 	if (!e) {
@@ -54,7 +54,7 @@ expr* new_bexpr(bool b)
 	return e;
 }
 
-expr* new_biexpr(int op, expr* left, expr* right)
+lol_expr* new_biexpr(int op, expr* left, expr* right)
 {
 	expr* e = malloc(sizeof(expr));
 	if (!e) {
@@ -62,7 +62,7 @@ expr* new_biexpr(int op, expr* left, expr* right)
 		memerr();
 	}
 
-	binop_expr* binop = malloc(sizeof(binop_expr));
+	binop_expr* binop = malloc(sizeof(lol_binop_expr));
 	if (!binop) {
 		free(binop);
 		free(e);
@@ -74,4 +74,9 @@ expr* new_biexpr(int op, expr* left, expr* right)
 	binop->op = op;
 	e->binop = binop;
 	return e;
+}
+
+lol_stmt* new_stmt()
+{
+
 }
