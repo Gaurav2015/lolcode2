@@ -74,7 +74,7 @@ void add_item(lexitemlist* list, lexitem* item)
 	list->items[list->nitems - 1] = item;
 }
 
-char* get_exprkey(expr* e)
+char* get_exprkey(lol_expr* e)
 {
 	switch (e->type) {
 		case T_NUMBR:
@@ -102,7 +102,7 @@ char* interpolate()
 		result = concat(result, nchar);
 	}
 
-	expr* e;
+	lol_expr* e;
 	if ((e = htbl_get(locals, result)) != NULL)
 		return get_exprkey(e);
 	else {

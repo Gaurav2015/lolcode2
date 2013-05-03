@@ -22,6 +22,7 @@
 FILE* src;
 
 extern HTABLE* funcs;
+extern HTABLE* locals;
 
 typedef struct lol_block_t {
 	HTABLE* locals;
