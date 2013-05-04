@@ -12,7 +12,7 @@
 
 lol_expr* new_dexpr(double d)
 {
-	lol_expr* e = malloc(sizeof(expr));
+	lol_expr* e = malloc(sizeof(lol_expr));
 	if (!e) {
 		free(e);
 		memerr();
@@ -23,7 +23,7 @@ lol_expr* new_dexpr(double d)
 
 lol_expr* new_lexpr(long l)
 {
-	lol_expr* e = malloc(sizeof(expr));
+	lol_expr* e = malloc(sizeof(lol_expr));
 	if (!e) {
 		free(e);
 		memerr();
@@ -34,7 +34,7 @@ lol_expr* new_lexpr(long l)
 
 lol_expr* new_sexpr(char* s)
 {
-	lol_expr* e = malloc(sizeof(expr));
+	lol_expr* e = malloc(sizeof(lol_expr));
 	if (!e) {
 		free(e);
 		memerr();
@@ -45,7 +45,7 @@ lol_expr* new_sexpr(char* s)
 
 lol_expr* new_bexpr(bool b)
 {
-	lol_expr* e = malloc(sizeof(expr));
+	lol_expr* e = malloc(sizeof(lol_expr));
 	if (!e) {
 		free(e);
 		memerr();
@@ -56,7 +56,7 @@ lol_expr* new_bexpr(bool b)
 
 lol_expr* new_biexpr(int op, lol_expr* left, lol_expr* right)
 {
-	lol_expr* e = malloc(sizeof(expr));
+	lol_expr* e = malloc(sizeof(lol_expr));
 	if (!e) {
 		free(e);
 		memerr();
@@ -76,8 +76,21 @@ lol_expr* new_biexpr(int op, lol_expr* left, lol_expr* right)
 	return e;
 }
 
-lol_stmt* new_ifstmt(lol_expr* cond, lol_stmt** then, lol_expr** elsifs, lol_expr** elsifthens,
-				  	 lol_stmts* elsestmts)
+//TODO finish function
+lol_stmt* new_ifstmt(lol_expr* cond, lol_block* then, lol_expr** elsifs, lol_block** elsifthens, lol_block* elsestmts)
 {
-	//Finish up stuff here
+	lol_if_stmt* if_stmt = malloc(sizeof(lol_if_stmt));			
+	if (!if_stmt) {
+		free(if_stmt);
+		memerr();
+	}
+
+	if_stmt->cond = cond;
+	
+	lol_stmt* stmt = malloc(sizeof(lol_stmt));
+
+	if (!stmt) {
+		free(stmt);
+		memerr();
+	}
 }
